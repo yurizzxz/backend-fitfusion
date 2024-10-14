@@ -11,21 +11,20 @@ app.setErrorHandler((error, request, reply) => {
 });
 
 const start = async () => {
-  app.register(cors, async (instance) => {
-    return {
-      origin: ['http://localhost:8081', 'https://backend-fitfusion-ymwv.vercel.app'],
-      methods: ['GET', 'POST'],  
-      credentials: true         
-    };
+  app.register(cors, {
+    origin: true, // Permite todas as origens
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'], // Adiciona cabeçalhos permitidos
+    credentials: true,
   });
 
   app.register(routes);
 
   try {
-    await app.listen({ port: 3000, host: "0.0.0.0" });
-    console.log(`Servidor rodando no http://localhost:3000`);
+    await app.listen({ port: process.env.PORT || 3000, host: "0.0.0.0" });
+    console.log(`Servidor rodando em http://localhost:${process.env.PORT || 3000}`);
   } catch (err) {
-    console.log(err);
+    console.error('Erro ao iniciar o servidor:', err);
   }
 };
 
