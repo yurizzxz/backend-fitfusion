@@ -11,7 +11,14 @@ app.setErrorHandler((error, request, reply) => {
 });
 
 const start = async () => {
-  app.register(cors);
+  app.register(cors, async (instance) => {
+    return {
+      origin: ['http://localhost:8081', 'https://backend-fitfusion-ymwv.vercel.app'],
+      methods: ['GET', 'POST'],  
+      credentials: true         
+    };
+  });
+
   app.register(routes);
 
   try {
