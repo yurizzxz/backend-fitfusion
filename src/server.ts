@@ -13,14 +13,7 @@ app.setErrorHandler((error, request, reply) => {
 const start = async () => {
   
   app.register(cors, {
-    origin: (origin, cb) => {
-      const allowedOrigins = ["*", "https://backend-fitfusion-ymwv.vercel.app"];
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        cb(null, true);
-      } else {
-        cb(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: "*", 
     methods: ['GET', 'POST', 'OPTIONS'],  
     allowedHeaders: ['Content-Type', 'Authorization'], 
     credentials: true, 
@@ -36,5 +29,6 @@ const start = async () => {
     console.error('Erro ao iniciar o servidor:', err);
   }
 };
+
 
 start();
