@@ -14,7 +14,7 @@ const start = async () => {
   
   app.register(cors, {
     origin: (origin, cb) => {
-      const allowedOrigins = ["http://localhost:8082", "https://backend-fitfusion-ymwv.vercel.app"];
+      const allowedOrigins = ["*", "https://backend-fitfusion-ymwv.vercel.app"];
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         cb(null, true);
       } else {
