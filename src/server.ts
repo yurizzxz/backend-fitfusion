@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-import cors from "fastify-cors";
+import cors from '@fastify/cors';
 import dotenv from 'dotenv';
 import { routes } from './routes';
 
@@ -11,24 +11,15 @@ app.setErrorHandler((error, request, reply) => {
 });
 
 const start = async () => {
-  
-  app.register(cors, {
-    origin: "*", 
-    methods: ['GET', 'POST', 'OPTIONS'],  
-    allowedHeaders: ['Content-Type', 'Authorization'], 
-    credentials: true, 
-  });
-
-  // Registrando as rotas
+  app.register(cors);
   app.register(routes);
 
   try {
-    await app.listen({ port: process.env.PORT || 3000, host: "0.0.0.0" });
-    console.log(`Servidor rodando em http://localhost:${process.env.PORT || 3000}`);
+    await app.listen({ port: 3000, host: "0.0.0.0" });
+    console.log(`Servidor rodando no http://localhost:3000`);
   } catch (err) {
-    console.error('Erro ao iniciar o servidor:', err);
+    console.log(err);
   }
 };
-
 
 start();
