@@ -1,52 +1,56 @@
-import { DataProps } from '../controllers/CreateNutritionController'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenerativeAI } from '@google/generative-ai';  
 
 class CreateNutritionService {
   async execute({ name, age, gender, height, level, objective, weight }: DataProps) {
     try {
-      const genAI = new GoogleGenerativeAI('AIzaSyBgvFl2Cn7ks4l17FgxP9IJUx_2KzTLYnM')
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
+    
+      const genAI = new GoogleGenerativeAI('AIzaSyBgvFl2Cn7ks4l17FgxP9IJUx_2KzTLYnM');
+      
+   
+      const model = genAI.getGenerativeModel({ model: 'gemini' });
 
-      const response = await model.generateContent(`Crie uma dieta completa para uma pessoa chamada ${name}, do sexo ${gender}, com peso atual de ${weight}kg, altura de ${height}m, idade de ${age} anos, com foco em ${objective}. A pessoa tem um nível de atividade ${level}. Para a dieta:
+      const contentRequest = `
+        Crie uma dieta completa para uma pessoa chamada ${name}, do sexo ${gender}, com peso atual de ${weight}kg, altura de ${height}m, idade de ${age} anos, com foco em ${objective}. 
+        A pessoa tem um nível de atividade ${level}. Para a dieta, considere alimentos comuns da classe média baixa brasileira, incluindo uma diversidade que atenda ao objetivo:
 
         - Inclua alimentos acessíveis no Brasil, como arroz, feijão, carne, legumes, verduras, frutas e ovos.
         - Forneça quantidades recomendadas em gramas ou mililitros para cada alimento.
-        - Distribua as refeições em 6 períodos: café da manhã, lanche da manhã, almoço, lanche da tarde, jantar, e ceia.
-        - Para hipertrofia: priorize alta ingestão proteica (peito de frango, ovos, carne vermelha magra), carboidratos complexos (arroz integral, batata-doce), e gorduras saudáveis (castanhas, azeite).
+        - Distribua as refeições em 6 períodos: café da manhã, lanche da manhã, almoço, lanche da tarde, jantar e ceia.
+        - Para hipertrofia: priorize alta ingestão proteica (peito de frango, ovos, carne vermelha magra), carboidratos complexos (arroz integral, batata-doce) e gorduras saudáveis (castanhas, azeite).
         - Para emagrecimento: reduza calorias, inclua fibras (frutas, verduras) e proteínas magras (peixe, frango, ovos).
         - Indique calorias totais por dia e para cada refeição.
         - Use alimentos naturais e minimamente processados.
         - Inclua sugestões de suplementos, como whey protein para hipertrofia ou termogênicos para emagrecimento.
+      `;
 
-        Retorne as informações em JSON com as seguintes propriedades: 
-        - 'nome'
-        - 'sexo'
-        - 'idade'
-        - 'altura'
-        - 'peso'
-        - 'objetivo'
-        - 'nivel_atividade'
-        - 'refeicoes', onde 'refeicoes' é um array com objetos. Cada objeto contém: 'horario', 'nome', 'alimentos' (array de alimentos e suas quantidades), e 'calorias'. Não use acentos no JSON.`)
+      const response = await model.generateContent(contentRequest);
 
-      console.log(JSON.stringify(response, null, 2))
+    
+      if (response?.candidates?.[0]?.content?.text) {
+        const jsonText = response.candidates[0].content.text;
 
-      if (response.response && response.response.candidates) {
-        const jsonText = response.response.candidates[0]?.content.parts[0].text as string
+     
+        let jsonString = jsonText.replace(/\`\`\w*\n/g, '');
+        jsonString = jsonString.trim();
 
-        // Extrair o JSON
-        let jsonString = jsonText.replace(/```\w*\n/g, '').replace(/\n```/g, '').trim()
-
-        let jsonObject = JSON.parse(jsonString)
-
-        return { data: jsonObject }
+       
+        try {
+          const jsonObject = JSON.parse(jsonString);
+          return jsonObject;
+        } catch (jsonError) {
+          console.error('Erro ao analisar JSON:', jsonError);
+          throw new Error('Erro ao analisar conteúdo JSON retornado');
+        }
+      } else {
+        console.error('Nenhum conteúdo gerado pela IA');
+        throw new Error('Nenhum conteúdo gerado pela IA');
       }
-
     } catch (err) {
-      console.error("Erro JSON: ", err)
-      throw new Error("Failed to create.")
+      console.error('Erro na geração da dieta:', err);
+      throw new Error('Erro ao gerar dieta: ' + err.message);
     }
   }
 }
 
-export { CreateNutritionService }
+export { CreateNutritionService };
 
