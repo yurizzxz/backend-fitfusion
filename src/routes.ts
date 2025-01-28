@@ -2,116 +2,38 @@ import {
   FastifyInstance,
   FastifyPluginOptions,
   FastifyRequest,
-  FastifyReply
-} from 'fastify';
-import { CreateNutritionController } from './controllers/CreateNutritionController';
+  FastifyReply,
+} from "fastify";
+import { CreateNutritionController } from "./controllers/CreateNutritionController";
 
-export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
+export async function routes(
+  fastify: FastifyInstance,
+  options: FastifyPluginOptions
+) {
+  fastify.get("/teste", (request: FastifyRequest, reply: FastifyReply) => {
+    let responseText =
+      '```json\n{\n  "nome": "Yuri",\n  "sexo": "Masculino",\n  "idade": 17,\n  "altura": 1.80,\n  "peso": 74,\n  "objetivo": "Hipertrofia",\n  "refeicoes": [\n    {\n      "horario": "08:00",\n      "nome": "Café da Manhã",\n      "alimentos": [\n        "2 fatias de pão integral",\n        "2 ovos mexidos",\n        "1 banana",\n        "200ml de leite desnatado"\n      ]\n    },\n    {\n      "horario": "10:00",\n      "nome": "Lanche da Manhã",\n        "alimentos": [\n          "1 iogurte grego natural",\n          "1 scoop de whey protein",\n          "1 colher de sopa de granola"\n        ]\n    },\n    {\n      "horario": "13:00",\n      "nome": "Almoço",\n      "alimentos": [\n        "150g de frango grelhado",\n        "1 xícara de arroz integral",\n        "1 xícara de brócolis cozido",\n        "Salada verde à vontade"\n      ]\n    },\n    {\n      "horario": "16:00",\n      "nome": "Lanche da Tarde",\n      "alimentos": [\n        "1 batata doce média",\n        "1 scoop de whey protein"\n      ]\n    },\n    {\n      "horario": "20:00",\n      "nome": "Jantar",\n      "alimentos": [\n        "150g de carne vermelha magra",\n        "1 xícara de batata doce cozida",\n        "1 xícara de couve refogada",\n        "Salada verde à vontade"\n      ]\n    },\n    {\n      "horario": "22:00",\n      "nome": "Lanche antes de dormir",\n        "alimentos": [\n          "200ml de leite desnatado",\n          "1 scoop de caseína"\n        ]\n    }\n  ],\n  "suplementos": [\n    "Whey Protein",\n    "Creatina",\n    "BCAA",\n    "Glutamina"\n  ]\n}\n```';
 
-  function generateDietJSON() {
-    return {
-      nome: "Yuri",
-      sexo: "Masculino",
-      idade: 17,
-      altura: 1.73,
-      peso: 68,
-      objetivo: "Hipertrofia",
-      refeicoes: [
-        {
-          horario: "08:00",
-          nome: "Café da Manhã",
-          alimentos: [
-            { nome: "Pão francês com manteiga", quantidade: "2 fatias" },
-            { nome: "Ovos cozidos ou mexidos", quantidade: "2 unidades" },
-            { nome: "Banana", quantidade: "1 unidade" },
-            { nome: "Leite", quantidade: "200ml" },
-            { nome: "Queijo", quantidade: "1 fatia" },
-            { nome: "Café preto", quantidade: "1 xícara" }
-          ],
-          calorias: 400
-        },
-        {
-          horario: "10:00",
-          nome: "Lanche da Manhã",
-          alimentos: [
-            { nome: "Iogurte natural", quantidade: "1 unidade" },
-            { nome: "Pão integral com requeijão", quantidade: "1 fatia" },
-            { nome: "Maçã", quantidade: "1 unidade" },
-            { nome: "Castanhas ou amendoim", quantidade: "1 punhado" }
-          ],
-          calorias: 250
-        },
-        {
-          horario: "13:00",
-          nome: "Almoço",
-          alimentos: [
-            { nome: "Frango grelhado ou cozido", quantidade: "150g" },
-            { nome: "Arroz", quantidade: "1 xícara" },
-            { nome: "Feijão", quantidade: "1 xícara" },
-            { nome: "Brócolis ou couve refogada", quantidade: "1 xícara" },
-            { nome: "Salada de alface e tomate", quantidade: "à vontade" },
-            { nome: "Batata cozida", quantidade: "1 unidade" }
-          ],
-          calorias: 600
-        },
-        {
-          horario: "16:00",
-          nome: "Lanche da Tarde",
-          alimentos: [
-            { nome: "Pão com queijo e presunto", quantidade: "1 fatia" },
-            { nome: "Banana", quantidade: "1 unidade" },
-            { nome: "Bolacha cream cracker", quantidade: "1 unidade" },
-            { nome: "Suco de laranja", quantidade: "1 copo" }
-          ],
-          calorias: 300
-        },
-        {
-          horario: "20:00",
-          nome: "Jantar",
-          alimentos: [
-            { nome: "Carne moída ou frango", quantidade: "150g" },
-            { nome: "Arroz", quantidade: "1 xícara" },
-            { nome: "Legumes cozidos (cenoura, abobrinha)", quantidade: "1 xícara" },
-            { nome: "Salada de repolho e cenoura", quantidade: "à vontade" },
-            { nome: "Abacate", quantidade: "1 fatia" }
-          ],
-          calorias: 500
-        },
-        {
-          horario: "22:00",
-          nome: "Lanche da Noite",
-          alimentos: [
-            { nome: "Leite com achocolatado", quantidade: "200ml" },
-            { nome: "Pão com manteiga", quantidade: "1 fatia" },
-            { nome: "Frutas da estação", quantidade: "1 porção" }
-          ],
-          calorias: 200
-        }
-      ],
-      suplementos: [
-        { nome: "Whey Protein", dosagem: "30g após treino" },
-        { nome: "Creatina", dosagem: "5g por dia" }
-      ],
-      calorias_totais: 2250,
-      macros: {
-        proteinas: "150g",
-        carboidratos: "250g",
-        gorduras: "70g"
-      }
-    };
-  }
-
-  fastify.get('/form', (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const diet = generateDietJSON();
-      return reply.send({ data: diet });
+      let jsonString = responseText
+        .replace(/```\w*\n/g, "")
+        .replace(/\n```/g, "")
+        .trim();
+
+      let jsonObject = JSON.parse(jsonString);
+
+      return reply.send({ data: jsonObject });
     } catch (err) {
-      console.error(err);
-      return reply.status(500).send({ error: "Erro ao gerar a dieta." });
+      console.log(err);
     }
+
+    reply.send({ ok: true });
   });
 
-  fastify.post('/create', async (request: FastifyRequest, reply: FastifyReply) => {
-    return new CreateNutritionController().handle(request, reply);
-  });
+  fastify.post(
+    "/create",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      return new CreateNutritionController().handle(request, reply);
+    }
+  );
 }
